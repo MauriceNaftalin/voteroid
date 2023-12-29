@@ -1,4 +1,5 @@
-var data = [0, 0, 0];
+var data = [10,15,20];
+var labels = ["esdfqxy"];
 const svg = d3.select("svg");
 const svgWidth = 250, svgHeight = 250;
 const barWidth = svgWidth / data.length;
@@ -8,7 +9,7 @@ function consoleOutput(text) {
     document.getElementById('consoleLog').textContent = text;
 }
 
-// Set up the bar chart
+// https://codesandbox.io/p/sandbox/d3-playground-forked-vqh5wr?file=%2Findex.js%3A59%2C27
 svg.selectAll("rect")
     .data(data)
     .enter().append("rect")
@@ -18,8 +19,17 @@ svg.selectAll("rect")
     .attr("height", d => d * 10)
     .attr("fill", "steelblue");
 
+svg.selectAll("text")
+    .data(labels)
+    .enter()
+    .append("text")
+    .text(d => d) // Set text content based on data
+    .attr("text-anchor", "middle") // Center-align the text
+    .attr("x", (d, i) => i * barWidth + barWidth / 2) // Set x position based on data
+    .attr("y", svgHeight - 30); // Set y position
+
 function increaseBarHeight(answerNumber) {
-    console.log('answew: ' + answerNumber)
+    console.log('answer: ' + answerNumber)
     const additionalHeight = 10; // Height increase each click
 
     svg.selectAll(`rect:nth-child(${answerNumber})`)
@@ -49,7 +59,11 @@ stompClient.onConnect = (frame) => {
     stompClient.subscribe('/topic/vote', (vote) => {
         increaseBarHeight(JSON.parse(vote.body).content);
     });
-    consoleOutput(window.location.host);
+    stompClient.subscribe('/topic/labels', (labels) => {
+        consoleOutput(JSON.parse(labels.body).content);
+    });
+    // consoleOutput(window.location.host);
+    // consoleOutput(labels);
 };
 
 stompClient.onWebSocketError = (error) => {
