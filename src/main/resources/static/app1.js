@@ -8,12 +8,11 @@ function consoleOutput(text) {
     document.getElementById('consoleLog').textContent = text;
 }
 
-// https://codesandbox.io/p/sandbox/d3-playground-forked-vqh5wr?file=%2Findex.js%3A59%2C27
 svg.selectAll("rect")
     .data(data)
     .enter().append("rect")
     .attr("x", (d, i) => i * barWidth)
-    .attr("y", d => svgHeight - d * 10) // Scale the bar height
+    .attr("y", d => svgHeight - 20 - d * 10) // Scale the bar height
     .attr("width", barWidth - 1)
     .attr("height", d => d * 10)
     .attr("fill", "steelblue");
@@ -40,6 +39,6 @@ function setColumnLabels(labelsText) {
         .text(d => d) // Set text content based on data
         .attr("text-anchor", "middle") // Center-align the text
         .attr("x", (d, i) => i * barWidth + barWidth / 2) // Set x position based on data
-        .attr("y", svgHeight - 30); // Set y position
+        .attr("y", svgHeight - 2); // Set y position
 }
 

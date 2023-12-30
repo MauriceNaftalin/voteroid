@@ -1,20 +1,19 @@
-var labels1;
-
 document.addEventListener("DOMContentLoaded", function() {
     stompClient.activate();
 });
+
 document.addEventListener("DOMContentLoaded", function() {
     fetch('http://localhost:8080/getlabels', {
         method: 'GET',
-        headers: {'Content-Type': 'application/text',},
+        headers: {'Content-Type': 'application/json'}
     })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return response.text();
+            return response.json();
         })
-        .then(data => setColumnLabels([data]))
+        .then(data => setColumnLabels(data))
         .catch(error => {
             console.error('Fetch error:', error);
         });
@@ -34,12 +33,8 @@ stompClient.onConnect = (frame) => {
     stompClient.subscribe('/topic/vote', (vote) => {
         increaseBarHeight(JSON.parse(vote.body).content);
     });
-    stompClient.subscribe('/topic/labels', (labels) => {
-        labels1 = JSON.parse(labels.body).content;
-        increaseBarHeight(1);
-        // consoleOutput(labels1);
-    });
 };
+
 stompClient.onWebSocketError = (error) => {
     console.error('Error with websocket', error);
 };

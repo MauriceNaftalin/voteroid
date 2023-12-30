@@ -19,25 +19,23 @@ public class RestController {
     @GetMapping("/vote")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void vote(@RequestParam(value = "answer") int answer) {
-        simpTemplate.convertAndSend("/topic/labels", Map.of("content", new String[] {model.getLabels(), "234234"} ));
         simpTemplate.convertAndSend("/topic/vote", Map.of("content", answer));
     }
 
     //https://stackoverflow.com/questions/4596351/binding-a-list-in-requestparam
-    //https://stackoverflow.com/questions/11889997/how-to-send-an-array-in-url-request - this looks right
-    @GetMapping("/labels")
+    //https://stackoverflow.com/questions/11889997/how-to-send-an-array-in-url-request
+    @GetMapping("/setColumnLabels")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void labelColumns(@RequestParam(value = "labels") String labels) {
-        model.setLabels(labels);
+        model.setColumnLabels(labels.split(";"));
     }
 
     @GetMapping("/getlabels")
-    public String getLabels() {
-        return model.getLabels();
+    public String[] getColumnLabels() {
+        return model.getColumnLabels();
     }
 
     // alternative annotations (not sure of the difference)
     // @MessageMapping("/vote")
     // @SendTo("/topic/votes")
-
 }

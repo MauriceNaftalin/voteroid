@@ -13,7 +13,7 @@ public class MessagingStompWebsocketApplication {
 	}
 
 	@Bean
-	public Model main() {
+	public Model create() {
 		return new Model();
 	}
 }
