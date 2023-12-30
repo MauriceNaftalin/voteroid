@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
-    fetch('http://localhost:8080/getlabels', {
+    fetch('http://' + window.location.host + '/getlabels', {
         method: 'GET',
         headers: {'Content-Type': 'application/json'}
     })
