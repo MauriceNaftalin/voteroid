@@ -24,15 +24,17 @@ function increaseBarHeight(answerNumber) {
     const additionalHeight = 10; // Height increase each click
 
     svg.selectAll(`rect:nth-child(${answerNumber})`)
-        .attr("height", function(d) {
+        .attr("height", function (d) {
             return parseFloat(d3.select(this).attr("height")) + additionalHeight;
         })
-        .attr("y", function(d) {
+        .attr("y", function (d) {
             return parseFloat(d3.select(this).attr("y")) - additionalHeight;
         });
+}
 
+function setColumnLabels(labelsText) {
     svg.selectAll("text")
-        .data(labels1)
+        .data(labelsText)
         .enter()
         .append("text")
         .text(d => d) // Set text content based on data

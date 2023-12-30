@@ -4,13 +4,13 @@ package com.voteroid.model;
 // application if/when it has a state
 public class Model {
 
-    private String name;
+    private String labels;
 
-    public String getName() {
-        return name;
+    public String getLabels() {
+        return labels;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabels(String labels) {
+        this.labels = labels;
     }
 }

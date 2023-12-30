@@ -12,8 +12,6 @@ public class MessagingStompWebsocketApplication {
 		SpringApplication.run(MessagingStompWebsocketApplication.class, args);
 	}
 
-	// currently not in use, but this would represent the state of the
-	// application if/when it has a state
 	@Bean
 	public Model main() {
 		return new Model();
