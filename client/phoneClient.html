@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phone Client</title>
+</head>
+<body>
+<div>
+    Server:<br>
+    <input type="radio" name="endpointOptions" value="localhost"> localhost<br>
+    <input type="radio" name="endpointOptions" value="AWS"> AWS<br>
+</div>
+<form class='voteButtonForm' action="" method="GET">
+    <input type="hidden" name="answer" value="1">
+    <input type="submit" value="Answer: 1">
+</form>
+<form class='voteButtonForm' action="" method="GET">
+    <input type="hidden" name="answer" value="2">
+    <input type="submit" value="Answer: 2">
+</form>
+<form class='voteButtonForm' action="" method="GET">
+    <input type="hidden" name="answer" value="3">
+    <input type="submit" value="Answer: 3">
+</form>
+<script>
+    function setEndpointInButtonForms() {
+        var forms = document.getElementsByClassName('voteButtonForm');
+        var selectedOption = document.querySelector('input[name="endpointOptions"]:checked');
+
+        if (selectedOption) {
+            for (const form of forms) {
+                if (selectedOption.value === 'localhost') {
+                    form.action = 'http://localhost:8080/vote';
+                } else if (selectedOption.value === 'AWS') {
+                    form.action = 'http://voteroid-env.eba-mtfwaqgp.us-east-1.elasticbeanstalk.com:80/vote';
+                }
+            }
+        }
+    }
+
+    // Add event listeners to the radio buttons
+    var radioButtons = document.querySelectorAll('input[name="endpointOptions"]');
+    radioButtons.forEach(function(radio) {
+        radio.addEventListener('change', setEndpointInButtonForms);
+    });
+</script>
+</body>
+</html>

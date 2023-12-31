@@ -1,0 +1,41 @@
+= Title Slide
+:revealjsdir: .
+:revealjs_theme: sky
+//*:revealjs_width: 1600*/
+:docinfo: private
+:customcss: styles.css
+:source-highlighter: highlight.js
+
+//== Which Server?
+//[pass]
+//++++
+//<div style="display:flex">
+//    <div style="flex:1; text-align:left; margin-left:200px">
+//       <input type="radio" name="endpointOptions" value="localhost"> localhost<br>
+//       <input type="radio" name="endpointOptions" value="AWS"> AWS<br>
+//    </div>
+//</div>
+//++++
+
+[.columns]
+== What will it print?
+
+[.column-is-four-fifths]
+[source, java]
+--
+String[] stringArray = {"one", "two", "three"};
+var stringList = Arrays.asList(stringArray);
+
+int[] intArray = {1, 2, 3};
+var intList = Arrays.asList(intArray);
+
+System.out.print(stringList.contains("one") + ", ");
+System.out.print(intList.contains(1));
+--
+
+[.column]
+[pass]
+++++
+<script>fetch("http://localhost:8080/setColumnLabels?labels=true%2Cfalse;false%2Ctrue;true%2Ctrue")</script>
+<div class="fig-container iframe-container" data-file="http://localhost:8080/index-new.html">
+++++
