@@ -3,7 +3,9 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
-    fetch('http://' + window.location.host + '/getlabels', {
+    const params = new URLSearchParams(window.location.search);
+    const question = params.get('question');
+    fetch('http://' + window.location.host + '/' + question + '/getColumnLabels', {
         method: 'GET',
         headers: {'Content-Type': 'application/json'}
     })
@@ -30,7 +32,9 @@ const stompClient = new StompJs.Client({
 
 stompClient.onConnect = (frame) => {
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/vote', (vote) => {
+    const params = new URLSearchParams(window.location.search);
+    const question = params.get('question');
+    stompClient.subscribe('/topic/vote/' + question, (vote) => {
         increaseBarHeight(JSON.parse(vote.body).content);
     });
 };

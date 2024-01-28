@@ -7,13 +7,19 @@
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="app0.js"></script>
+
 </head>
 <body>
 <!-- bar chart -->
 <svg width="250" height="250"></svg>
 <!-- diagnostic output from scripts -->
-<label style="display: none; width: 100px;" id="consoleLog">consoleOutput</label>
+<label style="width: 100px;" id="consoleLog">consoleOutput</label>
 <!--https://stackoverflow.com/a/15069289-->
 <script src="app1.js"></script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const question = params.get('question');
+    document.getElementById('consoleLog').textContent = question;
+</script>
 </body>
 </html>
