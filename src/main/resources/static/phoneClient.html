@@ -41,7 +41,7 @@
         }
     }
 
-    function setCurrentSlide(currentSlide) {
+    function setCurrentQuestion(currentSlide) {
         var forms = document.getElementsByClassName('voteButtonForm');
         for (const form of forms) {
             form.action = 'http://localhost:8080/' + currentSlide + '/vote';
@@ -67,7 +67,7 @@
             }
             return response.json();
         })
-        .then(data => setCurrentSlide(data.currentSlide))
+        .then(data => setCurrentQuestion(data.currentSlide))
         .catch(error => {
             console.error('Fetch error:', error);
         });

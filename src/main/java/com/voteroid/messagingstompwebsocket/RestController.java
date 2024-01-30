@@ -37,7 +37,7 @@ public class RestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void setCurrentSlide(@RequestParam(value = "question") String currentQuestion) {
         model.setCurrentQuestion(currentQuestion);
-        simpTemplate.convertAndSend("/topic/currentSlide/", Map.of("content", currentQuestion));
+        simpTemplate.convertAndSend("/topic/currentQuestion/", Map.of("content", currentQuestion));
     }
 
     @GetMapping("/{question}/getColumnLabels")
@@ -49,7 +49,6 @@ public class RestController {
     public ResponseEntity<Map<String, String>> getCurrentSlide() {
         return ResponseEntity.ok(Map.of("currentSlide", model.getCurrentQuestion()));
     }
-
 
     // alternative annotations (not sure of the difference)
     // @MessageMapping("/vote")

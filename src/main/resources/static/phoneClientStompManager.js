@@ -4,8 +4,8 @@ const stompClient = new StompJs.Client({
 
 stompClient.onConnect = (frame) => {
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/currentSlide/', (data) => {
-        setCurrentSlide(JSON.parse(data.body).content);
+    stompClient.subscribe('/topic/currentQuestion/', (data) => {
+        setCurrentQuestion(JSON.parse(data.body).content);
     });
 };
 

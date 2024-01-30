@@ -1,26 +1,3 @@
-document.addEventListener("DOMContentLoaded", function() {
-    stompClient.activate();
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-    const params = new URLSearchParams(window.location.search);
-    const question = params.get('question');
-    fetch('http://' + window.location.host + '/' + question + '/getColumnLabels', {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'}
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => setColumnLabels(data))
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
-});
-
 const stompClient = new StompJs.Client({
     // Haven't tested the use of window.location.host on AWS yet, so the lines below are a fallback
 // const params = new URLSearchParams(window.location.search);
