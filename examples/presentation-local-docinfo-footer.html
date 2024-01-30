@@ -1,27 +1,37 @@
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<script src="plugin/reveald3.js"></script>
 <script>
-	Reveal.registerPlugin(Reveald3);
-</script>
-<script>
-	function setEndpointInIframe() {
-		var iframes = document.getElementsByClassName('iframe-container');
-		var selectedOption = document.querySelector('input[name="endpointOptions"]:checked');
+    /*
+        function setEndpointInIframe() {
+            var iframes = document.getElementsByClassName('iframe-container');
+            var selectedOption = document.querySelector('input[name="endpointOptions"]:checked');
 
-		if (selectedOption) {
-			for (const iframe of iframes) {
-				if (selectedOption.value === 'localhost') {
-					iframe.dataset.file = 'http://localhost:8080/vote';
-				} else if (selectedOption.value === 'AWS') {
-					iframe.dataset.file = 'http://voteroid-env.eba-mtfwaqgp.us-east-1.elasticbeanstalk.com/index-new.html?host=voteroid-env.eba-mtfwaqgp.us-east-1.elasticbeanstalk.com&port=80';
-				}
-			}
-		}
-	}
+            if (selectedOption) {
+                for (const iframe of iframes) {
+                    if (selectedOption.value === 'localhost') {
+                        iframe.dataset.file = 'http://localhost:8080/vote';
+                    } else if (selectedOption.value === 'AWS') {
+                        iframe.dataset.file = 'http://voteroid-env.eba-mtfwaqgp.us-east-1.elasticbeanstalk.com/index-new.html?host=voteroid-env.eba-mtfwaqgp.us-east-1.elasticbeanstalk.com&port=80';
+                    }
+                }
+            }
+        }
+        // Add event listeners to the radio buttons
+        var radioButtons = document.querySelectorAll('input[name="endpointOptions"]');
+        radioButtons.forEach(function(radio) {
+            radio.addEventListener('change', setEndpointInIframe);
+        });
+    */
 
-	// Add event listeners to the radio buttons
-	var radioButtons = document.querySelectorAll('input[name="endpointOptions"]');
-	radioButtons.forEach(function(radio) {
-		radio.addEventListener('change', setEndpointInIframe);
-	});
+    function setQuestionName(questionName) {
+        console.log(questionName);
+        fetch("http://localhost:8080/currentSlide?question=" + questionName);
+    }
+
+    Reveal.on( 'ready', event => {
+        setQuestionName("No question");
+    } );
+
+    Reveal.on( 'slidetransitionend', event => {
+        const iframeIdElement = (event.currentSlide.getElementsByTagName("iframe"))[0];
+        setQuestionName(iframeIdElement === undefined ? "No question" : iframeIdElement.id);
+    });
 </script>

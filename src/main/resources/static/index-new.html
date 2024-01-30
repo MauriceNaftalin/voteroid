@@ -19,7 +19,8 @@
 <script>
     const params = new URLSearchParams(window.location.search);
     const question = params.get('question');
-    document.getElementById('consoleLog').textContent = question;
+    consoleOutput(question);
+    // consoleOutput(`ws://` + window.location.host + `/gs-guide-websocket`);
 </script>
 </body>
 </html>

@@ -39,8 +39,22 @@ System.out.print(intList.contains(1));
 [pass]
 ++++
 <script>fetch("http://localhost:8080/question1/setColumnLabels?labels=true%2Cfalse;false%2Ctrue;true%2Ctrue")</script>
-<div><iframe src="http://localhost:8080/index-new.html?question=question1" width="800" height="300" allowfullscreen></iframe></div>
+<div><iframe id="question1" src="http://localhost:8080/index-new.html?question=question1" width="800" height="300" allowfullscreen></iframe></div>
 ++++
+
+== What might it print?
+
+[source, java]
+--
+String[] stringArray = {"three", "two", "one"};
+var stringList = Arrays.asList(stringArray);
+
+int[] intArray = {1, 2, 3};
+var intList = Arrays.asList(intArray);
+
+System.out.print(stringList.contains("one") + ", ");
+System.out.print(intList.contains(1));
+--
 
 [.columns]
 == What won't it print?
@@ -62,5 +76,5 @@ System.out.print(intList.contains(1));
 [pass]
 ++++
 <script>fetch("http://localhost:8080/question2/setColumnLabels?labels=yes%2Cno;no%2Cyes;yes%2Cyes")</script>
-<div><iframe src="http://localhost:8080/index-new.html?question=question2" width="800" height="300" allowfullscreen></iframe></div>
+<div><iframe id="question2" src="http://localhost:8080/index-new.html?question=question2" width="800" height="300" allowfullscreen></iframe></div>
 ++++

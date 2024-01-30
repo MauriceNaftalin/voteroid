@@ -3,20 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Phone Client</title>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script src="/phoneClientStompManager.js"></script>
 </head>
 <body>
-<!--
 <div>
     Server:<br>
     <input type="radio" name="endpointOptions" value="localhost"> localhost<br>
     <input type="radio" name="endpointOptions" value="AWS"> AWS<br>
 </div>
--->
-<div>
-    Question:<br>
-    <input type="radio" name="question" value="question1"> question1<br>
-    <input type="radio" name="question" value="question2"> question2<br>
-</div>
+<label style="width: 100px;" id="question">No question</label>
 <form class='voteButtonForm' action="" method="GET">
     <input type="hidden" name="answer" value="1">
     <input type="submit" value="Answer: 1">
@@ -30,7 +26,6 @@
     <input type="submit" value="Answer: 3">
 </form>
 <script>
-/*
     function setEndpointInButtonForms() {
         var forms = document.getElementsByClassName('voteButtonForm');
         var selectedOption = document.querySelector('input[name="endpointOptions"]:checked');
@@ -45,34 +40,37 @@
             }
         }
     }
-*/
-    function setQuestionInAnswerButton() {
-        var forms = document.getElementsByClassName('voteButtonForm');
-        var selectedOption = document.querySelector('input[name="question"]:checked');
 
-        if (selectedOption) {
-            for (const form of forms) {
-                if (selectedOption.value === 'question1') {
-                    form.action = 'http://localhost:8080/question1/vote';
-                } else if (selectedOption.value === 'question2') {
-                    form.action = 'http://localhost:8080/question2/vote';
-                }
-            }
+    function setCurrentSlide(currentSlide) {
+        var forms = document.getElementsByClassName('voteButtonForm');
+        for (const form of forms) {
+            form.action = 'http://localhost:8080/' + currentSlide + '/vote';
         }
+        document.getElementById('question').textContent = currentSlide;
     }
 
-/*
     // Add event listeners to the radio buttons
     var radioButtons = document.querySelectorAll('input[name="endpointOptions"]');
     radioButtons.forEach(function(radio) {
         radio.addEventListener('change', setEndpointInButtonForms);
     });
-*/
-// Add event listeners to the radio buttons
-var radioButtons = document.querySelectorAll('input[name="question"]');
-radioButtons.forEach(function(radio) {
-    radio.addEventListener('change', setQuestionInAnswerButton);
-});
+
+    connectStompClient();
+
+    fetch('http://' + window.location.host + '/getCurrentSlide', {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'}
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => setCurrentSlide(data.currentSlide))
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
 
 </script>
 </body>
