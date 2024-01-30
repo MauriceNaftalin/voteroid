@@ -14,3 +14,4 @@ To run the example, clone or download the project, then:
 Version history:
 - 0.0.1 Initial commit
 - 0.0.2 Provide column labels (for one slide only)
+- 0.0.3 Multiple questions – client aware, but without UI changes
