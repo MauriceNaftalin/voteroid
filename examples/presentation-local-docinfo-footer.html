@@ -23,7 +23,14 @@
 
     function setQuestionName(questionName) {
         console.log(questionName);
-        fetch("http://localhost:8080/currentSlide?question=" + questionName);
+        const requestOptions = {
+            method: 'PUT',
+            // headers: { 'Content-Type': 'application/json' },
+            // body: JSON.stringify('/slides/question1')
+            headers: { 'Content-Type': 'text/plain' },
+            body: questionName
+        };
+        fetch('http://localhost:8080/current-question-name', requestOptions);
     }
 
     Reveal.on( 'ready', event => {

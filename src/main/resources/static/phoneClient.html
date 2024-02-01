@@ -13,18 +13,45 @@
     <input type="radio" name="endpointOptions" value="AWS"> AWS<br>
 </div>
 <label style="width: 100px;" id="question">No question</label>
-<form class='voteButtonForm' action="" method="GET">
-    <input type="hidden" name="answer" value="1">
-    <input type="submit" value="Answer: 1">
-</form>
-<form class='voteButtonForm' action="" method="GET">
-    <input type="hidden" name="answer" value="2">
-    <input type="submit" value="Answer: 2">
-</form>
-<form class='voteButtonForm' action="" method="GET">
-    <input type="hidden" name="answer" value="3">
-    <input type="submit" value="Answer: 3">
-</form>
+<button class="dummyVoteButton">dummyVoteButton1</button>
+<button class="dummyVoteButton">dummyVoteButton2</button>
+<button class="dummyVoteButton">dummyVoteButton3</button>
+<script>
+    const elementsByClassName = document.getElementsByClassName('dummyVoteButton');
+    var currentQuestion;
+
+    for (let answer = 0; answer < elementsByClassName.length; answer++) {
+        setVotingButtonListener(elementsByClassName[answer], answer);
+    }
+
+    function setVotingButtonListener(button, answer) {
+        button.addEventListener('click', function () {
+            const requestOptions = {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+            };
+
+            const url = `http://localhost:8080/${currentQuestion}/vote/${answer + 1}`;
+
+            fetch(url, requestOptions)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    console.log('Vote successfully registered');
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        })
+    }
+
+    function setCurrentQuestion(currentSlide) {
+        currentQuestion = currentSlide;
+        document.getElementById('question').textContent = currentSlide;
+    }
+</script>
+
 <script>
     function setEndpointInButtonForms() {
         var forms = document.getElementsByClassName('voteButtonForm');
@@ -41,14 +68,6 @@
         }
     }
 
-    function setCurrentQuestion(currentSlide) {
-        var forms = document.getElementsByClassName('voteButtonForm');
-        for (const form of forms) {
-            form.action = 'http://localhost:8080/' + currentSlide + '/vote';
-        }
-        document.getElementById('question').textContent = currentSlide;
-    }
-
     // Add event listeners to the radio buttons
     var radioButtons = document.querySelectorAll('input[name="endpointOptions"]');
     radioButtons.forEach(function(radio) {
@@ -57,17 +76,19 @@
 
     connectStompClient();
 
-    fetch('http://' + window.location.host + '/getCurrentSlide', {
+    // TODO replace this with getting the current question name, then making the URI of the slide from it
+    // and getting that.
+    fetch('http://' + window.location.host + '/current-question-name', {
         method: 'GET',
-        headers: {'Content-Type': 'application/json'}
+        headers: {'Content-Type': 'text/plain'}
     })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return response.json();
+            return response.text();
         })
-        .then(data => setCurrentQuestion(data.currentSlide))
+        .then(data => setCurrentQuestion(data))
         .catch(error => {
             console.error('Fetch error:', error);
         });

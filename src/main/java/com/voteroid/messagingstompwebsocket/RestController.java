@@ -5,12 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @org.springframework.web.bind.annotation.RestController
@@ -19,9 +15,17 @@ public class RestController {
     @Autowired private Model model;
     @Autowired private SimpMessagingTemplate simpTemplate;
 
+/*
     @GetMapping("/{question}/vote")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void vote(@PathVariable String question, @RequestParam(value = "answer") int answer) {
+        simpTemplate.convertAndSend("/topic/vote/" + question, Map.of("content", answer));
+    }
+*/
+
+    @PutMapping("/{question}/vote/{answer}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void votex(@PathVariable String question, @PathVariable int answer) {
         simpTemplate.convertAndSend("/topic/vote/" + question, Map.of("content", answer));
     }
 
@@ -33,11 +37,11 @@ public class RestController {
         model.setColumnLabels(question,concatenatedLabels.split(";"));
     }
 
-    @GetMapping("/currentSlide")
+    @PutMapping("/current-question-name")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setCurrentSlide(@RequestParam(value = "question") String currentQuestion) {
-        model.setCurrentQuestion(currentQuestion);
-        simpTemplate.convertAndSend("/topic/currentQuestion/", Map.of("content", currentQuestion));
+    public void setCurrentQuestionName(@RequestBody String currentQuestionName) {
+        model.setCurrentQuestionName(currentQuestionName);
+        simpTemplate.convertAndSend("/topic/currentQuestion/", Map.of("content", currentQuestionName));
     }
 
     @GetMapping("/{question}/getColumnLabels")
@@ -45,9 +49,9 @@ public class RestController {
         return model.getColumnLabels(question);
     }
 
-    @GetMapping("/getCurrentSlide")
-    public ResponseEntity<Map<String, String>> getCurrentSlide() {
-        return ResponseEntity.ok(Map.of("currentSlide", model.getCurrentQuestion()));
+    @GetMapping("/current-question-name")
+    public String getCurrentQuestionName() {
+        return model.getCurrentQuestionName();
     }
 
     // alternative annotations (not sure of the difference)

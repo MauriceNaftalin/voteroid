@@ -1,13 +1,12 @@
 package com.voteroid.model;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Model {
 
     private final Map<String,String[]> columnLabels = new ConcurrentHashMap<>();
-    private String currentQuestion;
+    private String currentQuestionName;
 
     public String[] getColumnLabels(String question) {
         return columnLabels.get(question);
@@ -17,11 +16,12 @@ public class Model {
         this.columnLabels.put(question,columnLabels);
     }
 
-    public void setCurrentQuestion(String currentQuestion) {
-        this.currentQuestion = currentQuestion;
+    public void setCurrentQuestionName(String currentQuestionName) {
+        this.currentQuestionName = currentQuestionName;
     }
 
-    public String getCurrentQuestion() {
-        return currentQuestion;
+    public String getCurrentQuestionName() {
+        return currentQuestionName;
     }
+
 }
