@@ -28,21 +28,14 @@
 
     document.addEventListener("DOMContentLoaded", function() {
         const params = new URLSearchParams(window.location.search);
-        const question = params.get('question');
-        fetch('http://' + window.location.host + '/' + question + '/getColumnLabels', {
+        const questionName = params.get('question');
+        fetch(`http://${window.location.host}/slides/${questionName}/answer-texts`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+            .then(response => {if (!response.ok) throw new Error('Network response was not ok');return response.json();})
             .then(data => setColumnLabels(data))
-            .catch(error => {
-                console.error('Fetch error:', error);
-            });
+            .catch(error => console.error('Fetch error:', error));
     });
 
 </script>

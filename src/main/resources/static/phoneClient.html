@@ -7,72 +7,14 @@
     <script src="/phoneClientStompManager.js"></script>
 </head>
 <body>
-<div>
-    Server:<br>
-    <input type="radio" name="endpointOptions" value="localhost"> localhost<br>
-    <input type="radio" name="endpointOptions" value="AWS"> AWS<br>
-</div>
 <label style="width: 100px;" id="question">No question</label>
-<button class="dummyVoteButton">dummyVoteButton1</button>
-<button class="dummyVoteButton">dummyVoteButton2</button>
-<button class="dummyVoteButton">dummyVoteButton3</button>
+<br/>
+<button class="answerButton">answerButton1</button>
+<button class="answerButton">answerButton2</button>
+<button class="answerButton">answerButton3</button>
 <script>
-    const elementsByClassName = document.getElementsByClassName('dummyVoteButton');
+    const answerButtons = document.getElementsByClassName('answerButton');
     var currentQuestion;
-
-    for (let answer = 0; answer < elementsByClassName.length; answer++) {
-        setVotingButtonListener(elementsByClassName[answer], answer);
-    }
-
-    function setVotingButtonListener(button, answer) {
-        button.addEventListener('click', function () {
-            const requestOptions = {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-            };
-
-            const url = `http://localhost:8080/${currentQuestion}/vote/${answer + 1}`;
-
-            fetch(url, requestOptions)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    console.log('Vote successfully registered');
-                })
-                .catch(error => {
-                    console.error('There has been a problem with your fetch operation:', error);
-                });
-        })
-    }
-
-    function setCurrentQuestion(currentSlide) {
-        currentQuestion = currentSlide;
-        document.getElementById('question').textContent = currentSlide;
-    }
-</script>
-
-<script>
-    function setEndpointInButtonForms() {
-        var forms = document.getElementsByClassName('voteButtonForm');
-        var selectedOption = document.querySelector('input[name="endpointOptions"]:checked');
-
-        if (selectedOption) {
-            for (const form of forms) {
-                if (selectedOption.value === 'localhost') {
-                    form.action = 'http://localhost:8080/qwer/vote';
-                } else if (selectedOption.value === 'AWS') {
-                    form.action = 'http://voteroid-env.eba-mtfwaqgp.us-east-1.elasticbeanstalk.com:80/vote';
-                }
-            }
-        }
-    }
-
-    // Add event listeners to the radio buttons
-    var radioButtons = document.querySelectorAll('input[name="endpointOptions"]');
-    radioButtons.forEach(function(radio) {
-        radio.addEventListener('change', setEndpointInButtonForms);
-    });
 
     connectStompClient();
 
@@ -92,6 +34,33 @@
         .catch(error => {
             console.error('Fetch error:', error);
         });
+
+    for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
+        setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
+    }
+
+    function setAnswerButtonListener(button, answerIndex) {
+        button.addEventListener('click', function () {
+            const requestOptions = {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+            };
+            const voteUri = `http://localhost:8080/${currentQuestion}/answers/${answerIndex + 1}/vote`;
+            fetch(voteUri, requestOptions)
+                .then(response => {if (!response.ok) throw new Error('Network error');
+                    console.log(`Vote registered: /${currentQuestion}/answers/${answerIndex + 1}/vote`);
+                })
+                .catch(error => {
+                    console.error('Fetch operation error:', error);
+                });
+        })
+    }
+
+    /* called at initialisation of the client, and when the slide changes */
+    function setCurrentQuestion(currentSlide) {
+        currentQuestion = currentSlide;
+        document.getElementById('question').textContent = currentSlide;
+    }
 
 </script>
 </body>

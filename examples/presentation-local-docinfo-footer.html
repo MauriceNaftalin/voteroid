@@ -1,26 +1,4 @@
 <script>
-    /*
-        function setEndpointInIframe() {
-            var iframes = document.getElementsByClassName('iframe-container');
-            var selectedOption = document.querySelector('input[name="endpointOptions"]:checked');
-
-            if (selectedOption) {
-                for (const iframe of iframes) {
-                    if (selectedOption.value === 'localhost') {
-                        iframe.dataset.file = 'http://localhost:8080/vote';
-                    } else if (selectedOption.value === 'AWS') {
-                        iframe.dataset.file = 'http://voteroid-env.eba-mtfwaqgp.us-east-1.elasticbeanstalk.com/index-new.html?host=voteroid-env.eba-mtfwaqgp.us-east-1.elasticbeanstalk.com&port=80';
-                    }
-                }
-            }
-        }
-        // Add event listeners to the radio buttons
-        var radioButtons = document.querySelectorAll('input[name="endpointOptions"]');
-        radioButtons.forEach(function(radio) {
-            radio.addEventListener('change', setEndpointInIframe);
-        });
-    */
-
     function setQuestionName(questionName) {
         console.log(questionName);
         const requestOptions = {
