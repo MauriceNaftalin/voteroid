@@ -29,6 +29,19 @@
     document.addEventListener("DOMContentLoaded", function() {
         const params = new URLSearchParams(window.location.search);
         const questionName = params.get('question');
+
+        fetch(`http://${window.location.host}/slides/${questionName}`, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        })
+            .then(response => {if (!response.ok) throw new Error('Network response was not ok');return response.json();})
+            .then(data => {
+                const answerTexts = data.answers.map(obj => obj.text);
+                setColumnLabels(answerTexts)
+            })
+            .catch(error => console.error('Fetch error:', error));
+
+/*
         fetch(`http://${window.location.host}/slides/${questionName}/answer-texts`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
@@ -36,6 +49,7 @@
             .then(response => {if (!response.ok) throw new Error('Network response was not ok');return response.json();})
             .then(data => setColumnLabels(data))
             .catch(error => console.error('Fetch error:', error));
+*/
     });
 
 </script>

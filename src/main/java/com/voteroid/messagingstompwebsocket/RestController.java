@@ -1,6 +1,7 @@
 package com.voteroid.messagingstompwebsocket;
 
 import com.voteroid.model.Model;
+import com.voteroid.model.Slide;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -21,12 +22,11 @@ public class RestController {
         simpTemplate.convertAndSend("/topic/vote/" + question, Map.of("content", answerIndex));
     }
 
-    //https://stackoverflow.com/questions/4596351/binding-a-list-in-requestparam
-    //https://stackoverflow.com/questions/11889997/how-to-send-an-array-in-url-request
-    @GetMapping("/{question}/setColumnLabels")
+    @CrossOrigin
+    @PostMapping("/slides")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void setColumnLabels(@PathVariable String question, @RequestParam(value = "labels") String concatenatedLabels) {
-        model.createSlide(question,concatenatedLabels.split(";"));
+    public void createSlide(@RequestBody Slide slide) {
+        model.addSlide(slide);
     }
 
     @PutMapping("/current-question-name")
@@ -36,15 +36,15 @@ public class RestController {
         simpTemplate.convertAndSend("/topic/currentQuestion/", Map.of("content", currentQuestionName));
     }
 
-    @GetMapping("/current-question-name")
-    public String getCurrentQuestionName() {
-        return model.getCurrentQuestionName();
+    @GetMapping("/slides/current-slide")
+    public Slide getCurrentSlide() {
+        return model.getCurrentSlide();
     }
 
     // called by presentation iframe to set up
-    @GetMapping("/slides/{questionName}/answer-texts")
-    public List<String> getColumns(@PathVariable String questionName) {
-        return model.getColumnLabels(questionName);
+    @GetMapping("/slides/{questionName}")
+    public Slide getSlide(@PathVariable String questionName) {
+        return model.getSlide(questionName);
     }
 
     // alternative annotations (not sure of the difference)

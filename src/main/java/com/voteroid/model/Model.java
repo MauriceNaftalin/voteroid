@@ -8,13 +8,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Model {
 
-    private final Map<String,List<Answer>> slides = new ConcurrentHashMap<>();
+    private final Map<String,Slide> slides;
     private String currentQuestionName;
+    private final static String NO_QUESTION = "No question";
 
-    public void createSlide(String question, String[] answerTexts) {
-        List<Answer> columns = Arrays.stream(answerTexts)
-                .map(l -> new Answer(l,new AtomicInteger())).toList();
-        slides.put(question,columns);
+    public Model() {
+        slides = new ConcurrentHashMap<>();
+        slides.put(NO_QUESTION, new Slide("No question", List.of()));
+    }
+
+    public void addSlide(Slide s) {
+        slides.put(s.question(), s);
     }
 
     public void setCurrentQuestionName(String currentQuestionName) {
@@ -25,7 +29,11 @@ public class Model {
         return currentQuestionName;
     }
 
-    public List<String> getColumnLabels(String questionName) {
-        return slides.get(questionName).stream().map(Answer::text).toList();
+    public Slide getCurrentSlide() {
+        return slides.get(currentQuestionName);
+    }
+
+    public Slide getSlide(String questionName) {
+        return slides.get(questionName);
     }
 }

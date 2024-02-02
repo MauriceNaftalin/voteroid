@@ -14,30 +14,9 @@
 <button class="answerButton">answerButton3</button>
 <script>
     const answerButtons = document.getElementsByClassName('answerButton');
-    var currentQuestion;
 
     connectStompClient();
-
-    // TODO replace this with getting the current question name, then making the URI of the slide from it
-    // and getting that.
-    fetch('http://' + window.location.host + '/current-question-name', {
-        method: 'GET',
-        headers: {'Content-Type': 'text/plain'}
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();
-        })
-        .then(data => setCurrentQuestion(data))
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
-
-    for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
-        setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
-    }
+    setCurrentQuestion();
 
     function setAnswerButtonListener(button, answerIndex) {
         button.addEventListener('click', function () {
@@ -57,9 +36,29 @@
     }
 
     /* called at initialisation of the client, and when the slide changes */
-    function setCurrentQuestion(currentSlide) {
-        currentQuestion = currentSlide;
-        document.getElementById('question').textContent = currentSlide;
+    function setCurrentQuestion() {
+        fetch(`http://${window.location.host}/slides/current-slide`, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        })
+            .then(response => {if (!response.ok) throw new Error('Network error');return response.json();})
+            .then(data => {
+                document.getElementById('question').textContent = data.question;
+                if (data.question === "No question") {
+                    for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
+                        answerButtons[answerIndex].style.visibility = 'hidden';
+                    }
+                } else {
+                    for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
+                        setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
+                        answerButtons[answerIndex].textContent = data.answers[answerIndex].text;
+                        answerButtons[answerIndex].style.visibility = 'visible';
+                        const answerTexts = data.answers.map(obj => obj.text);
+                        console.log(answerTexts);
+                    }
+                }
+            })
+            .catch(error => console.error('Fetch error:', error));
     }
 
 </script>

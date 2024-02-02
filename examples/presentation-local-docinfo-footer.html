@@ -19,4 +19,36 @@
         const iframeIdElement = (event.currentSlide.getElementsByTagName("iframe"))[0];
         setQuestionName(iframeIdElement === undefined ? "No question" : iframeIdElement.id);
     });
+
+    function postSlide(question, concatenatedAnswerTexts) {
+        const url = 'http://localhost:8080/slides';
+
+        const answerTexts = concatenatedAnswerTexts.split(';');
+
+        const slide = {
+            question: question,
+            answers: answerTexts.map(text => ({ text, votes: 0 })) // Map each text to an Answer object
+        };
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(slide)
+        };
+
+        fetch(url, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
+                return response.json(); // or .text() if you're not returning JSON
+            })
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                console.error('Fetch failed:', error);
+            });
+    }
+
 </script>
