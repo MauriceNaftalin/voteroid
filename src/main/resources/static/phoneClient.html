@@ -14,9 +14,10 @@
 <button class="answerButton">answerButton3</button>
 <script>
     const answerButtons = document.getElementsByClassName('answerButton');
+    var currentQuestion;
 
     connectStompClient();
-    setCurrentQuestion();
+    getCurrentQuestionAndSetButtonListeners();
 
     function setAnswerButtonListener(button, answerIndex) {
         button.addEventListener('click', function () {
@@ -36,7 +37,7 @@
     }
 
     /* called at initialisation of the client, and when the slide changes */
-    function setCurrentQuestion() {
+    function getCurrentQuestionAndSetButtonListeners() {
         fetch(`http://${window.location.host}/slides/current-slide`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
@@ -49,6 +50,7 @@
                         answerButtons[answerIndex].style.visibility = 'hidden';
                     }
                 } else {
+                    currentQuestion = data.question;
                     for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
                         setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
                         answerButtons[answerIndex].textContent = data.answers[answerIndex].text;

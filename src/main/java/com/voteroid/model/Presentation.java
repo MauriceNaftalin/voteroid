@@ -12,7 +12,7 @@ public class Presentation {
 
     public Presentation() {
         slides = new ConcurrentHashMap<>();
-        slides.put(NO_QUESTION, new Slide("No question", List.of()));
+        slides.put(NO_QUESTION, new Slide(NO_QUESTION, List.of()));
     }
 
     public void addSlide(Slide s) {
@@ -21,10 +21,6 @@ public class Presentation {
 
     public void setCurrentQuestionName(String currentQuestionName) {
         this.currentQuestionName = currentQuestionName;
-    }
-
-    public String getCurrentQuestionName() {
-        return currentQuestionName;
     }
 
     public Slide getCurrentSlide() {

@@ -1,5 +1,5 @@
 <script>
-    function setQuestionName(questionName) {
+    function putQuestionName(questionName) {
         console.log(questionName);
         const requestOptions = {
             method: 'PUT',
@@ -12,12 +12,12 @@
     }
 
     Reveal.on( 'ready', event => {
-        setQuestionName("No question");
+        putQuestionName("No question");
     } );
 
     Reveal.on( 'slidetransitionend', event => {
         const iframeIdElement = (event.currentSlide.getElementsByTagName("iframe"))[0];
-        setQuestionName(iframeIdElement === undefined ? "No question" : iframeIdElement.id);
+        putQuestionName(iframeIdElement === undefined ? "No question" : iframeIdElement.id);
     });
 
     function postSlide(question, concatenatedAnswerTexts) {
