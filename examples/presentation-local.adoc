@@ -38,8 +38,42 @@ System.out.print(intList.contains(1));
 [.column]
 [pass]
 ++++
-<script>fetch("http://localhost:8080/question1/setColumnLabels?labels=true%2Cfalse;false%2Ctrue;true%2Ctrue")</script>
-<div><iframe id="question1" src="http://localhost:8080/index.html?question=question1" width="800" height="300" allowfullscreen></iframe></div>
+<div id="question1">x</div>
+<script>
+    function postSlide(question, concatenatedAnswerTexts) {
+        const url = 'http://localhost:8080/slides';
+
+        const answerTexts = concatenatedAnswerTexts.split(';');
+
+        const slide = {
+            question: question,
+            answers: answerTexts.map(text => ({ text, votes: 0 }))
+        };
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(slide)
+        };
+
+        fetch(url, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
+                // return response.json();
+            })
+            .then(data => {
+                document.getElementById("question1").innerHTML='<iframe id="question1" src="http://localhost:8080/index.html?question=question1" width="800" height="300" allowfullscreen></iframe>';
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                console.error('Fetch failed:', error);
+            });
+    }
+
+    postSlide('question1','true,false;false,true;true,true');
+</script>
 ++++
 
 == What might it print?
@@ -75,6 +109,41 @@ System.out.print(intList.contains(1));
 [.column]
 [pass]
 ++++
-<script>fetch("http://localhost:8080/question2/setColumnLabels?labels=yes%2Cno;no%2Cyes;yes%2Cyes")</script>
-<div><iframe id="question2" src="http://localhost:8080/index.html?question=question2" width="800" height="300" allowfullscreen></iframe></div>
+<div id="question2">x</div>
+<script>
+    function postSlide(question, concatenatedAnswerTexts) {
+        const url = 'http://localhost:8080/slides';
+
+        const answerTexts = concatenatedAnswerTexts.split(';');
+
+        const slide = {
+            question: question,
+            answers: answerTexts.map(text => ({ text, votes: 0 }))
+        };
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(slide)
+        };
+
+        fetch(url, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
+                // return response.json();
+            })
+            .then(data => {
+                document.getElementById("question2").innerHTML='<iframe id="question2" src="http://localhost:8080/index.html?question=question2" width="800" height="300" allowfullscreen></iframe>';
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                console.error('Fetch failed:', error);
+            });
+    }
+
+    postSlide('question2','yes,no;no,yes;yes,yes');
+
+</script>
 ++++

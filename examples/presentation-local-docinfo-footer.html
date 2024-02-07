@@ -1,37 +1,54 @@
 <script>
-    /*
-        function setEndpointInIframe() {
-            var iframes = document.getElementsByClassName('iframe-container');
-            var selectedOption = document.querySelector('input[name="endpointOptions"]:checked');
-
-            if (selectedOption) {
-                for (const iframe of iframes) {
-                    if (selectedOption.value === 'localhost') {
-                        iframe.dataset.file = 'http://localhost:8080/vote';
-                    } else if (selectedOption.value === 'AWS') {
-                        iframe.dataset.file = 'http://voteroid-env.eba-mtfwaqgp.us-east-1.elasticbeanstalk.com/index-new.html?host=voteroid-env.eba-mtfwaqgp.us-east-1.elasticbeanstalk.com&port=80';
-                    }
-                }
-            }
-        }
-        // Add event listeners to the radio buttons
-        var radioButtons = document.querySelectorAll('input[name="endpointOptions"]');
-        radioButtons.forEach(function(radio) {
-            radio.addEventListener('change', setEndpointInIframe);
-        });
-    */
-
-    function setQuestionName(questionName) {
+    function putQuestionName(questionName) {
         console.log(questionName);
-        fetch("http://localhost:8080/currentSlide?question=" + questionName);
+        const requestOptions = {
+            method: 'PUT',
+            // headers: { 'Content-Type': 'application/json' },
+            // body: JSON.stringify('/slides/question1')
+            headers: { 'Content-Type': 'text/plain' },
+            body: questionName
+        };
+        fetch('http://localhost:8080/current-question-name', requestOptions);
     }
 
     Reveal.on( 'ready', event => {
-        setQuestionName("No question");
+        putQuestionName("No question");
     } );
 
     Reveal.on( 'slidetransitionend', event => {
         const iframeIdElement = (event.currentSlide.getElementsByTagName("iframe"))[0];
-        setQuestionName(iframeIdElement === undefined ? "No question" : iframeIdElement.id);
+        putQuestionName(iframeIdElement === undefined ? "No question" : iframeIdElement.id);
     });
+
+    function postSlide(question, concatenatedAnswerTexts) {
+        const url = 'http://localhost:8080/slides';
+
+        const answerTexts = concatenatedAnswerTexts.split(';');
+
+        const slide = {
+            question: question,
+            answers: answerTexts.map(text => ({ text, votes: 0 })) // Map each text to an Answer object
+        };
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(slide)
+        };
+
+        fetch(url, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network error');
+                }
+                return response.json(); // or .text() if you're not returning JSON
+            })
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch(error => {
+                console.error('Fetch failed:', error);
+            });
+    }
+
 </script>

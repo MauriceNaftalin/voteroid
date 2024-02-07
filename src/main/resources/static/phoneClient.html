@@ -7,70 +7,61 @@
     <script src="/phoneClientStompManager.js"></script>
 </head>
 <body>
-<div>
-    Server:<br>
-    <input type="radio" name="endpointOptions" value="localhost"> localhost<br>
-    <input type="radio" name="endpointOptions" value="AWS"> AWS<br>
-</div>
 <label style="width: 100px;" id="question">No question</label>
-<form class='voteButtonForm' action="" method="GET">
-    <input type="hidden" name="answer" value="1">
-    <input type="submit" value="Answer: 1">
-</form>
-<form class='voteButtonForm' action="" method="GET">
-    <input type="hidden" name="answer" value="2">
-    <input type="submit" value="Answer: 2">
-</form>
-<form class='voteButtonForm' action="" method="GET">
-    <input type="hidden" name="answer" value="3">
-    <input type="submit" value="Answer: 3">
-</form>
+<br/>
+<button class="answerButton">answerButton1</button>
+<button class="answerButton">answerButton2</button>
+<button class="answerButton">answerButton3</button>
 <script>
-    function setEndpointInButtonForms() {
-        var forms = document.getElementsByClassName('voteButtonForm');
-        var selectedOption = document.querySelector('input[name="endpointOptions"]:checked');
-
-        if (selectedOption) {
-            for (const form of forms) {
-                if (selectedOption.value === 'localhost') {
-                    form.action = 'http://localhost:8080/qwer/vote';
-                } else if (selectedOption.value === 'AWS') {
-                    form.action = 'http://voteroid-env.eba-mtfwaqgp.us-east-1.elasticbeanstalk.com:80/vote';
-                }
-            }
-        }
-    }
-
-    function setCurrentQuestion(currentSlide) {
-        var forms = document.getElementsByClassName('voteButtonForm');
-        for (const form of forms) {
-            form.action = 'http://localhost:8080/' + currentSlide + '/vote';
-        }
-        document.getElementById('question').textContent = currentSlide;
-    }
-
-    // Add event listeners to the radio buttons
-    var radioButtons = document.querySelectorAll('input[name="endpointOptions"]');
-    radioButtons.forEach(function(radio) {
-        radio.addEventListener('change', setEndpointInButtonForms);
-    });
+    const answerButtons = document.getElementsByClassName('answerButton');
+    var currentQuestion;
 
     connectStompClient();
+    getCurrentQuestionAndSetButtonListeners();
 
-    fetch('http://' + window.location.host + '/getCurrentSlide', {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'}
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
+    function setAnswerButtonListener(button, answerIndex) {
+        button.addEventListener('click', function () {
+            const requestOptions = {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+            };
+            const voteUri = `http://localhost:8080/${currentQuestion}/answers/${answerIndex + 1}/vote`;
+            fetch(voteUri, requestOptions)
+                .then(response => {if (!response.ok) throw new Error('Network error');
+                    console.log(`Vote registered: /${currentQuestion}/answers/${answerIndex + 1}/vote`);
+                })
+                .catch(error => {
+                    console.error('Fetch operation error:', error);
+                });
         })
-        .then(data => setCurrentQuestion(data.currentSlide))
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
+    }
+
+    /* called at initialisation of the client, and when the slide changes */
+    function getCurrentQuestionAndSetButtonListeners() {
+        fetch(`http://${window.location.host}/slides/current-slide`, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        })
+            .then(response => {if (!response.ok) throw new Error('Network error');return response.json();})
+            .then(data => {
+                document.getElementById('question').textContent = data.question;
+                if (data.question === "No question") {
+                    for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
+                        answerButtons[answerIndex].style.visibility = 'hidden';
+                    }
+                } else {
+                    currentQuestion = data.question;
+                    for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
+                        setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
+                        answerButtons[answerIndex].textContent = data.answers[answerIndex].text;
+                        answerButtons[answerIndex].style.visibility = 'visible';
+                        const answerTexts = data.answers.map(obj => obj.text);
+                        console.log(answerTexts);
+                    }
+                }
+            })
+            .catch(error => console.error('Fetch error:', error));
+    }
 
 </script>
 </body>
