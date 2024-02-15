@@ -25,6 +25,7 @@ public class PresentationController {
         simpTemplate.convertAndSend("/topic/vote/" + presentation.getCurrentSlide().question(), Map.of("content", answerIndex));
         logger.debug("acceptVote: " + answerIndex);
         return answerIndex; // currently unused
+
     }
 
     // called at presentation initialisation
