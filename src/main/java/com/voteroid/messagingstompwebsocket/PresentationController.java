@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import java.util.Map;
 
 @org.springframework.web.bind.annotation.RestController
@@ -19,12 +20,12 @@ public class PresentationController {
 
     Logger logger = LoggerFactory.getLogger(PresentationController.class);
 
-    // vote
-    @PutMapping("/{question}/answers/{answerIndex}/vote")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void vote(@PathVariable String question, @PathVariable int answerIndex) {
-        logger.debug("PUT vote: " + answerIndex);
-        simpTemplate.convertAndSend("/topic/vote/" + question, Map.of("content", answerIndex));
+    @MessageMapping("/send")
+    public int acceptVote(int answerIndex) {
+        simpTemplate.convertAndSend("/topic/vote/" + presentation.getCurrentSlide().question(), Map.of("content", answerIndex));
+        logger.debug("acceptVote: " + answerIndex);
+        return answerIndex; // currently unused
+
     }
 
     // called at presentation initialisation

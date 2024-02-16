@@ -21,19 +21,9 @@
 
     function setAnswerButtonListener(button, answerIndex) {
         button.addEventListener('click', function () {
-            const requestOptions = {
-                method: 'PUT',
-                headers: {'Content-Type': 'application/json'},
-            };
-            const voteUri = `http://localhost:8080/${currentQuestion}/answers/${answerIndex + 1}/vote`;
-            fetch(voteUri, requestOptions)
-                .then(response => {if (!response.ok) throw new Error('Network error');
-                    console.log(`Vote registered: /${currentQuestion}/answers/${answerIndex + 1}/vote`);
-                })
-                .catch(error => {
-                    console.error('Fetch operation error:', error);
-                });
-        })
+                stompClient.publish({destination: "/app/send", body: answerIndex + 1});
+            }
+        )
     }
 
     /* called at initialisation of the client, and when the slide changes */
