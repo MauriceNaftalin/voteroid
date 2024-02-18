@@ -11,8 +11,8 @@ stompClient.onConnect = (frame) => {
     console.log('Connected: ' + frame);
     const params = new URLSearchParams(window.location.search);
     const question = params.get('question');
-    stompClient.subscribe('/topic/vote/' + question, (vote) => {
-        increaseBarHeight(JSON.parse(vote.body).content);
+    stompClient.subscribe('/topic/votes/' + question, (voteUpdate) => {
+        setBarHeight(JSON.parse(voteUpdate.body).content);
     });
 };
 

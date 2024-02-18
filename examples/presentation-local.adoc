@@ -38,7 +38,7 @@ System.out.print(intList.contains(1));
 [.column]
 [pass]
 ++++
-<div id="question1">x</div>
+<div id="question1">No connection to server</div>
 <script>
     function postSlide(question, concatenatedAnswerTexts) {
         const url = 'http://localhost:8080/slides';
@@ -109,7 +109,7 @@ System.out.print(intList.contains(1));
 [.column]
 [pass]
 ++++
-<div id="question2">x</div>
+<div id="question2">No connection to server</div>
 <script>
     function postSlide(question, concatenatedAnswerTexts) {
         const url = 'http://localhost:8080/slides';
