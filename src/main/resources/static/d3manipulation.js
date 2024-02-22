@@ -17,17 +17,15 @@ svg.selectAll("rect")
     .attr("height", d => d * 10)
     .attr("fill", "steelblue");
 
-
-function increaseBarHeight(answerNumber) {
-    console.log('answer: ' + answerNumber)
-    const additionalHeight = 10; // Height increase each click
-
-    svg.selectAll(`rect:nth-child(${answerNumber})`)
+function setBarHeight(voteUpdate) {
+    console.log('answer: ' + voteUpdate)
+    const voteCount = voteUpdate.voteCount;
+    svg.selectAll(`rect:nth-child(${voteUpdate.answerIndex})`)
         .attr("height", function (d) {
-            return parseFloat(d3.select(this).attr("height")) + additionalHeight;
+            return voteCount * 10;
         })
         .attr("y", function (d) {
-            return parseFloat(d3.select(this).attr("y")) - additionalHeight;
+            return svgHeight - (voteCount * 10) - 20;
         });
 }
 
