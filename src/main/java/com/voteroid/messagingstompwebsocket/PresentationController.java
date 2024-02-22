@@ -29,15 +29,6 @@ public class PresentationController {
                 Map.of("content", Map.of("answerIndex", answerIndex, "voteCount", voteCount)));
     }
 
-/*
-    @MessageMapping("/vote")
-    public int acceptVote1(int answerIndex) {
-        simpTemplate.convertAndSend("/topic/vote/" + presentation.getCurrentSlide().question(), Map.of("content", answerIndex));
-        logger.debug("acceptVote: " + answerIndex);
-        return answerIndex; // currently unused
-
-    }
-*/
  // called at presentation initialisation
     @CrossOrigin
     @PostMapping("/slides")
