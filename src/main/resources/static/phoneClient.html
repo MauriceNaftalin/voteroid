@@ -21,7 +21,8 @@
 
     function setAnswerButtonListener(button, answerIndex) {
         button.addEventListener('click', function () {
-                stompClient.publish({destination: "/app/send", body: answerIndex + 1});
+                // 1-indexed, as serialization doesn't work for a payload of 0
+                stompClient.publish({destination: "/app/vote", body: answerIndex + 1});
             }
         )
     }

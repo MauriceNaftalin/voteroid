@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import java.util.Map;
 
 @org.springframework.web.bind.annotation.RestController
@@ -20,15 +19,26 @@ public class PresentationController {
 
     Logger logger = LoggerFactory.getLogger(PresentationController.class);
 
-    @MessageMapping("/send")
-    public int acceptVote(int answerIndex) {
+    @MessageMapping("/vote")
+    public void acceptVote(int answerIndex) {
+        logger.debug("acceptVote: " + answerIndex);
+        final Slide currentSlide = presentation.getCurrentSlide();
+        // answerIndex is 1-indexed, and so is d3
+        final int voteCount = currentSlide.answers().get(answerIndex - 1).votes().incrementAndGet();
+        simpTemplate.convertAndSend("/topic/votes/" + currentSlide.question(),
+                Map.of("content", Map.of("answerIndex", answerIndex, "voteCount", voteCount)));
+    }
+
+/*
+    @MessageMapping("/vote")
+    public int acceptVote1(int answerIndex) {
         simpTemplate.convertAndSend("/topic/vote/" + presentation.getCurrentSlide().question(), Map.of("content", answerIndex));
         logger.debug("acceptVote: " + answerIndex);
         return answerIndex; // currently unused
 
     }
-
-    // called at presentation initialisation
+*/
+ // called at presentation initialisation
     @CrossOrigin
     @PostMapping("/slides")
     @ResponseStatus(HttpStatus.NO_CONTENT)
