@@ -7,6 +7,9 @@ stompClient.onConnect = (frame) => {
     stompClient.subscribe('/topic/currentQuestion/', (data) => {
         getCurrentQuestionAndSetButtonListeners();
     });
+    stompClient.subscribe('/topic/votes', (voteUpdate) => {
+        setBarHeight(JSON.parse(voteUpdate.body).content);
+    });
 };
 
 stompClient.onWebSocketError = (error) => {

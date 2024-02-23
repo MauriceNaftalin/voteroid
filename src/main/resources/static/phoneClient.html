@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <title>Phone Client</title>
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="/phoneClientStompManager.js"></script>
 </head>
 <body>
+<svg width="250" height="250" id="svg"></svg>
+<script src="/d3manipulation.js"></script>
 <label style="width: 100px;" id="question">No question</label>
 <br/>
 <button class="answerButton">answerButton1</button>
@@ -37,14 +40,18 @@
             .then(data => {
                 document.getElementById('question').textContent = data.question;
                 if (data.question === "No question") {
+                    document.getElementById('svg').style.visibility = 'hidden';
                     for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
                         answerButtons[answerIndex].style.visibility = 'hidden';
                     }
                 } else {
                     currentQuestion = data.question;
+                    document.getElementById('svg').style.visibility = 'visible';
                     for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
                         setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
                         answerButtons[answerIndex].textContent = data.answers[answerIndex].text;
+                        // d3 is 1-indexed
+                        setBarHeight({"answerIndex": answerIndex + 1, "voteCount": data.answers[answerIndex].votes});
                         answerButtons[answerIndex].style.visibility = 'visible';
                         const answerTexts = data.answers.map(obj => obj.text);
                         console.log(answerTexts);

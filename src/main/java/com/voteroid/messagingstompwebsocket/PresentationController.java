@@ -25,11 +25,11 @@ public class PresentationController {
         final Slide currentSlide = presentation.getCurrentSlide();
         // answerIndex is 1-indexed, and so is d3
         final int voteCount = currentSlide.answers().get(answerIndex - 1).votes().incrementAndGet();
-        simpTemplate.convertAndSend("/topic/votes/" + currentSlide.question(),
-                Map.of("content", Map.of("answerIndex", answerIndex, "voteCount", voteCount)));
+        simpTemplate.convertAndSend("/topic/votes",
+                Map.of("content", Map.of("question", currentSlide.question(), "answerIndex", answerIndex, "voteCount", voteCount)));
     }
 
- // called at presentation initialisation
+    // called at presentation initialisation
     @CrossOrigin
     @PostMapping("/slides")
     @ResponseStatus(HttpStatus.NO_CONTENT)
