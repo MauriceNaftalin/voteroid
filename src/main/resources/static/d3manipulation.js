@@ -1,5 +1,6 @@
 var svg;
 var chartHeight;
+var barWidth;
 
 function showQuestionName(text) {
     document.getElementById('questionName').textContent = text;
@@ -9,7 +10,7 @@ function setUpSvg(svgWidth, svgHeight) {
     svg = d3.select("svg");
     chartHeight = svgHeight;
     var data = [0, 0, 0];
-    var barWidth = svgWidth / data.length;
+    barWidth = svgWidth / data.length;
 
     svg.selectAll("rect")
         .data(data)
@@ -33,16 +34,14 @@ function setVoteCount(voteUpdate) {
         });
 }
 
-/*
 function setColumnLabels(labelsText) {
-    d3svg.selectAll("text")
+    svg.selectAll("text")
         .data(labelsText)
         .enter()
         .append("text")
         .text(d => d) // Set text content based on data
         .attr("text-anchor", "middle") // Center-align the text
         .attr("x", (d, i) => i * barWidth + barWidth / 2) // Set x position based on data
-        .attr("y", svgHeight - 2); // Set y position
+        .attr("y", chartHeight - 2); // Set y position
 }
-*/
 

@@ -6,25 +6,24 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="iframeStompManager.js"></script>
-
+    <script src="/iframeStompManager.js"></script>
+    <script src="/d3manipulation.js"></script>
 </head>
 <body>
 <!-- bar chart -->
 <svg width="250" height="250"></svg>
-<!-- diagnostic output from scripts -->
-<label style="width: 100px;" id="consoleLog">consoleOutput</label>
+<br/>
+<label style="width: 100px;" id="questionName">consoleOutput</label>
 <!--https://stackoverflow.com/a/15069289-->
-<script src="d3manipulation.js"></script>
 <script>
     const params = new URLSearchParams(window.location.search);
     const question = params.get('question');
     showQuestionName(question);
     // consoleOutput(`ws://` + window.location.host + `/gs-guide-websocket`);
-    var potentialBarHeight = 230;
 
     document.addEventListener("DOMContentLoaded", function() {
         stompClient.activate();
+        setUpSvg(250,250);
     });
 
     document.addEventListener("DOMContentLoaded", function() {
