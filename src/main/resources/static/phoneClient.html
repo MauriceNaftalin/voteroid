@@ -2,25 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Phone Client</title>
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="/phoneClientStompManager.js"></script>
 </head>
 <body>
-<svg width="250" height="250" id="svg"></svg>
-<script src="/d3manipulation.js"></script>
-<label style="width: 100px;" id="question">No question</label>
+<svg id="svg"></svg>
+<label style="width: 100px;" id="questionNameLabel">No question</label>
 <br/>
 <button class="answerButton">answerButton1</button>
 <button class="answerButton">answerButton2</button>
 <button class="answerButton">answerButton3</button>
 <script>
     const answerButtons = document.getElementsByClassName('answerButton');
+    const svg = document.getElementById("svg");
     var currentQuestion;
+    var chartHeight, chartWidth;
 
     connectStompClient();
-    getCurrentQuestionAndSetButtonListeners();
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var svgElement = document.getElementById("svg");
+
+        // Set the SVG dimensions
+        chartHeight = window.innerHeight - 75;
+        chartWidth = window.innerWidth - 20;
+        svgElement.setAttribute("width", chartWidth);
+        svgElement.setAttribute("height", chartHeight);
+        setUpSvg(window.innerWidth, window.innerHeight - 75);
+        getCurrentQuestionAndSetButtonListeners();
+    });
 
     function setAnswerButtonListener(button, answerIndex) {
         button.addEventListener('click', function () {
@@ -38,7 +51,7 @@
         })
             .then(response => {if (!response.ok) throw new Error('Network error');return response.json();})
             .then(data => {
-                document.getElementById('question').textContent = data.question;
+                document.getElementById('questionNameLabel').textContent = data.question;
                 if (data.question === "No question") {
                     document.getElementById('svg').style.visibility = 'hidden';
                     for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
@@ -60,7 +73,7 @@
             })
             .catch(error => console.error('Fetch error:', error));
     }
-
 </script>
+<script src="/d3manipulation.js"></script>
 </body>
 </html>

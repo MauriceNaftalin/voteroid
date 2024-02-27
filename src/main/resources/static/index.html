@@ -19,8 +19,9 @@
 <script>
     const params = new URLSearchParams(window.location.search);
     const question = params.get('question');
-    consoleOutput(question);
+    showQuestionName(question);
     // consoleOutput(`ws://` + window.location.host + `/gs-guide-websocket`);
+    var potentialBarHeight = 230;
 
     document.addEventListener("DOMContentLoaded", function() {
         stompClient.activate();
