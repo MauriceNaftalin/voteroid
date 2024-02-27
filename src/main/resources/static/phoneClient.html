@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="/phoneClientStompManager.js"></script>
+    <script src="/d3manipulation.js"></script>
 </head>
 <body>
 <svg id="svg"></svg>
@@ -17,7 +18,6 @@
 <button class="answerButton">answerButton3</button>
 <script>
     const answerButtons = document.getElementsByClassName('answerButton');
-    const svg = document.getElementById("svg");
     var currentQuestion;
     var chartHeight, chartWidth;
 
@@ -25,8 +25,6 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         var svgElement = document.getElementById("svg");
-
-        // Set the SVG dimensions
         chartHeight = window.innerHeight - 75;
         chartWidth = window.innerWidth - 20;
         svgElement.setAttribute("width", chartWidth);
@@ -64,7 +62,7 @@
                         setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
                         answerButtons[answerIndex].textContent = data.answers[answerIndex].text;
                         // d3 is 1-indexed
-                        setBarHeight({"answerIndex": answerIndex + 1, "voteCount": data.answers[answerIndex].votes});
+                        setVoteCount({"answerIndex": answerIndex + 1, "voteCount": data.answers[answerIndex].votes});
                         answerButtons[answerIndex].style.visibility = 'visible';
                         const answerTexts = data.answers.map(obj => obj.text);
                         console.log(answerTexts);
@@ -74,6 +72,5 @@
             .catch(error => console.error('Fetch error:', error));
     }
 </script>
-<script src="/d3manipulation.js"></script>
 </body>
 </html>

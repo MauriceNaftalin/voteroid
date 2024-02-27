@@ -1,9 +1,13 @@
+function showQuestionName(text) {
+    document.getElementById('questionName').textContent = text;
+}
+
 function setUpSvg(svgWidth, svgHeight) {
     var data = [0, 0, 0];
-    const d3svg = d3.select("svg");
+    const svg = d3.select("svg");
     var barWidth = svgWidth / data.length;
 
-    d3svg.selectAll("rect")
+    svg.selectAll("rect")
         .data(data)
         .enter().append("rect")
         .attr("x", (d, i) => i * barWidth)
@@ -12,18 +16,12 @@ function setUpSvg(svgWidth, svgHeight) {
         .attr("height", d => d * 10)
         .attr("fill", "steelblue")
     ;
-    return {d3svg, svgHeight, barWidth};
 }
 
-function showQuestionName(text) {
-    document.getElementById('questionName').textContent = text;
-}
-
-function setBarHeight(voteUpdate) {
+function setVoteCount(voteUpdate) {
     console.log('answer: ' + voteUpdate)
     const voteCount = voteUpdate.voteCount;
-    const d3svg = d3.select("svg");
-    d3svg.selectAll(`rect:nth-child(${voteUpdate.answerIndex})`)
+    d3.select("svg").selectAll(`rect:nth-child(${voteUpdate.answerIndex})`)
         .attr("height", function (d) {
             return voteCount * 10;
         })

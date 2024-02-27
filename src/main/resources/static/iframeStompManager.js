@@ -14,7 +14,7 @@ stompClient.onConnect = (frame) => {
     stompClient.subscribe('/topic/votes', (voteUpdate) => {
         const content = JSON.parse(voteUpdate.body).content;
         if (content.question === question) {
-            setBarHeight(content);
+            setVoteCount(content);
         }
     });
 };
