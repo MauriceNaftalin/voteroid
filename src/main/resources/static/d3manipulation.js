@@ -1,10 +1,14 @@
+var svg;
+var chartHeight;
+
 function showQuestionName(text) {
     document.getElementById('questionName').textContent = text;
 }
 
 function setUpSvg(svgWidth, svgHeight) {
+    svg = d3.select("svg");
+    chartHeight = svgHeight;
     var data = [0, 0, 0];
-    const svg = d3.select("svg");
     var barWidth = svgWidth / data.length;
 
     svg.selectAll("rect")
@@ -14,14 +18,13 @@ function setUpSvg(svgWidth, svgHeight) {
         .attr("y", d => svgHeight - d * 10) // Scale the bar height
         .attr("width", barWidth - 1)
         .attr("height", d => d * 10)
-        .attr("fill", "steelblue")
-    ;
+        .attr("fill", "steelblue");
 }
 
 function setVoteCount(voteUpdate) {
     console.log('answer: ' + voteUpdate)
     const voteCount = voteUpdate.voteCount;
-    d3.select("svg").selectAll(`rect:nth-child(${voteUpdate.answerIndex})`)
+    svg.selectAll(`rect:nth-child(${voteUpdate.answerIndex})`)
         .attr("height", function (d) {
             return voteCount * 10;
         })
@@ -30,6 +33,7 @@ function setVoteCount(voteUpdate) {
         });
 }
 
+/*
 function setColumnLabels(labelsText) {
     d3svg.selectAll("text")
         .data(labelsText)
@@ -40,4 +44,5 @@ function setColumnLabels(labelsText) {
         .attr("x", (d, i) => i * barWidth + barWidth / 2) // Set x position based on data
         .attr("y", svgHeight - 2); // Set y position
 }
+*/
 

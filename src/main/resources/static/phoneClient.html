@@ -19,17 +19,16 @@
 <script>
     const answerButtons = document.getElementsByClassName('answerButton');
     var currentQuestion;
-    var chartHeight, chartWidth;
 
     connectStompClient();
 
     document.addEventListener('DOMContentLoaded', function() {
+        var chartHeight = window.innerHeight - 75;
+        var chartWidth = window.innerWidth - 20;
         var svgElement = document.getElementById("svg");
-        chartHeight = window.innerHeight - 75;
-        chartWidth = window.innerWidth - 20;
         svgElement.setAttribute("width", chartWidth);
         svgElement.setAttribute("height", chartHeight);
-        setUpSvg(window.innerWidth, window.innerHeight - 75);
+        setUpSvg(chartWidth, chartHeight);
         getCurrentQuestionAndSetButtonListeners();
     });
 
