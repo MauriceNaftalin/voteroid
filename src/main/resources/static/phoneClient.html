@@ -2,12 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Phone Client</title>
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="/phoneClientStompManager.js"></script>
+    <script src="/d3manipulation.js"></script>
 </head>
 <body>
-<label style="width: 100px;" id="question">No question</label>
+<svg id="svg"></svg>
+<label style="width: 100px;" id="questionNameLabel">No question</label>
 <br/>
 <button class="answerButton">answerButton1</button>
 <button class="answerButton">answerButton2</button>
@@ -17,7 +21,16 @@
     var currentQuestion;
 
     connectStompClient();
-    getCurrentQuestionAndSetButtonListeners();
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var chartHeight = window.innerHeight - 75;
+        var chartWidth = window.innerWidth - 20;
+        var svgElement = document.getElementById("svg");
+        svgElement.setAttribute("width", chartWidth);
+        svgElement.setAttribute("height", chartHeight);
+        setUpSvg(chartWidth, chartHeight);
+        getCurrentQuestionAndSetButtonListeners();
+    });
 
     function setAnswerButtonListener(button, answerIndex) {
         button.addEventListener('click', function () {
@@ -35,16 +48,20 @@
         })
             .then(response => {if (!response.ok) throw new Error('Network error');return response.json();})
             .then(data => {
-                document.getElementById('question').textContent = data.question;
+                document.getElementById('questionNameLabel').textContent = data.question;
                 if (data.question === "No question") {
+                    document.getElementById('svg').style.visibility = 'hidden';
                     for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
                         answerButtons[answerIndex].style.visibility = 'hidden';
                     }
                 } else {
                     currentQuestion = data.question;
+                    document.getElementById('svg').style.visibility = 'visible';
                     for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
                         setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
                         answerButtons[answerIndex].textContent = data.answers[answerIndex].text;
+                        // d3 is 1-indexed
+                        setVoteCount({"answerIndex": answerIndex + 1, "voteCount": data.answers[answerIndex].votes});
                         answerButtons[answerIndex].style.visibility = 'visible';
                         const answerTexts = data.answers.map(obj => obj.text);
                         console.log(answerTexts);
@@ -53,7 +70,6 @@
             })
             .catch(error => console.error('Fetch error:', error));
     }
-
 </script>
 </body>
 </html>
