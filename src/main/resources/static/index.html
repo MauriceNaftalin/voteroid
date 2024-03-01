@@ -20,14 +20,11 @@
 <script>
     connectStompClient();
 
-    const params = new URLSearchParams(window.location.search);
-    const question = params.get('question');
-    showQuestionName(question);
-
     document.addEventListener('DOMContentLoaded', function() {
         var svgElement = document.getElementById("svg");
         const params = new URLSearchParams(window.location.search);
         if (params.size === 0) {
+            // phone client
             var chartHeight = window.innerHeight - 75;
             var chartWidth = window.innerWidth - 20;
             svgElement.setAttribute("width", chartWidth);
@@ -35,6 +32,8 @@
             setUpSvg(chartWidth, chartHeight);
             getCurrentQuestionAndSetButtonListeners();
         } else {
+            // presentation iframe
+            const question = params.get('question');
             showQuestionName(question);
             svgElement.setAttribute("width", 250);
             svgElement.setAttribute("height", 250);
@@ -52,20 +51,19 @@
         })
             .then(response => {if (!response.ok) throw new Error('Network response was not ok');return response.json();})
             .then(data => {
-                const answerTexts = data.answers.map(obj => obj.text);
-                setButtonLabels(answerTexts);
+                setButtonLabels(data.answers);
             })
             .catch(error => console.error('Fetch error:', error));
-    });
+    })
 
-    function setButtonLabels(answerTexts) {
+    function setButtonLabels(answers) {
         const answerButtons = document.getElementsByClassName('answerButton');
+        const answerTexts = answers.map(obj => obj.text);
         for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
             answerButtons[answerIndex].textContent = answerTexts[answerIndex];
             console.log(answerTexts);
         }
     }
-
 </script>
 </body>
 </html>

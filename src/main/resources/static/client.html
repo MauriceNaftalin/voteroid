@@ -24,6 +24,7 @@
         var svgElement = document.getElementById("svg");
         const params = new URLSearchParams(window.location.search);
         if (params.size === 0) {
+            // phone client
             var chartHeight = window.innerHeight - 75;
             var chartWidth = window.innerWidth - 20;
             svgElement.setAttribute("width", chartWidth);
@@ -31,6 +32,8 @@
             setUpSvg(chartWidth, chartHeight);
             getCurrentQuestionAndSetButtonListeners();
         } else {
+            // presentation iframe
+            const question = params.get('question');
             showQuestionName(question);
             svgElement.setAttribute("width", 250);
             svgElement.setAttribute("height", 250);
@@ -65,7 +68,7 @@
                     document.getElementById('svg').style.visibility = 'visible';
                     for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
                         setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
-                        answerButtons[answerIndex].textContent = data.answers[answerIndex].text;
+                        setButtonLabels(data.answers);
                         // d3 is 1-indexed
                         setVoteCount({"answerIndex": answerIndex + 1, "voteCount": data.answers[answerIndex].votes});
                         answerButtons[answerIndex].style.visibility = 'visible';
@@ -75,6 +78,15 @@
                 }
             })
             .catch(error => console.error('Fetch error:', error));
+    }
+
+    function setButtonLabels(answers) {
+        const answerButtons = document.getElementsByClassName('answerButton');
+        const answerTexts = answers.map(obj => obj.text);
+        for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
+            answerButtons[answerIndex].textContent = answerTexts[answerIndex];
+            console.log(answerTexts);
+        }
     }
 </script>
 </body>
