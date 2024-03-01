@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Phone Client</title>
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="/phoneClientStompManager.js"></script>
@@ -11,13 +10,14 @@
 </head>
 <body>
 <svg id="svg"></svg>
+<div>
+    <button class="answerButton">answerButton1</button>
+    <button class="answerButton">answerButton2</button>
+    <button class="answerButton">answerButton3</button>
+</div>
 <label style="width: 100px;" id="questionNameLabel">No question</label>
-<br/>
-<button class="answerButton">answerButton1</button>
-<button class="answerButton">answerButton2</button>
-<button class="answerButton">answerButton3</button>
+<!--https://stackoverflow.com/a/15069289-->
 <script>
-    const answerButtons = document.getElementsByClassName('answerButton');
     var currentQuestion;
 
     connectStompClient();
@@ -48,7 +48,8 @@
         })
             .then(response => {if (!response.ok) throw new Error('Network error');return response.json();})
             .then(data => {
-                document.getElementById('questionNameLabel').textContent = data.question;
+                const answerButtons = document.getElementsByClassName('answerButton');
+                showQuestionName(data.question);
                 if (data.question === "No question") {
                     document.getElementById('svg').style.visibility = 'hidden';
                     for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {

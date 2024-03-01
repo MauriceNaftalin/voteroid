@@ -3,7 +3,7 @@ var chartHeight;
 var barWidth;
 
 function showQuestionName(text) {
-    document.getElementById('questionName').textContent = text;
+    document.getElementById('questionNameLabel').textContent = text;
 }
 
 function setUpSvg(svgWidth, svgHeight) {
@@ -34,6 +34,7 @@ function setVoteCount(voteUpdate) {
         });
 }
 
+/*
 function setColumnLabels(labelsText) {
     svg.selectAll("text")
         .data(labelsText)
@@ -44,4 +45,5 @@ function setColumnLabels(labelsText) {
         .attr("x", (d, i) => i * barWidth + barWidth / 2) // Set x position based on data
         .attr("y", chartHeight - 2); // Set y position
 }
+*/
 
