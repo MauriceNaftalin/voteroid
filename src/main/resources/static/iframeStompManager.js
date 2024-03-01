@@ -27,3 +27,7 @@ stompClient.onStompError = (frame) => {
     console.error('Broker reported error: ' + frame.headers['message']);
     console.error('Additional details: ' + frame.body);
 };
+
+function connectStompClient() {
+    stompClient.activate();
+}

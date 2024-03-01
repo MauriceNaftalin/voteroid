@@ -18,18 +18,24 @@
 <label style="width: 100px;" id="questionNameLabel">No question</label>
 <!--https://stackoverflow.com/a/15069289-->
 <script>
-    var currentQuestion;
-
     connectStompClient();
 
     document.addEventListener('DOMContentLoaded', function() {
-        var chartHeight = window.innerHeight - 75;
-        var chartWidth = window.innerWidth - 20;
         var svgElement = document.getElementById("svg");
-        svgElement.setAttribute("width", chartWidth);
-        svgElement.setAttribute("height", chartHeight);
-        setUpSvg(chartWidth, chartHeight);
-        getCurrentQuestionAndSetButtonListeners();
+        const params = new URLSearchParams(window.location.search);
+        if (params.size === 0) {
+            var chartHeight = window.innerHeight - 75;
+            var chartWidth = window.innerWidth - 20;
+            svgElement.setAttribute("width", chartWidth);
+            svgElement.setAttribute("height", chartHeight);
+            setUpSvg(chartWidth, chartHeight);
+            getCurrentQuestionAndSetButtonListeners();
+        } else {
+            showQuestionName(question);
+            svgElement.setAttribute("width", 250);
+            svgElement.setAttribute("height", 250);
+            setUpSvg(250,250);
+        }
     });
 
     function setAnswerButtonListener(button, answerIndex) {
@@ -56,7 +62,6 @@
                         answerButtons[answerIndex].style.visibility = 'hidden';
                     }
                 } else {
-                    currentQuestion = data.question;
                     document.getElementById('svg').style.visibility = 'visible';
                     for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
                         setAnswerButtonListener(answerButtons[answerIndex], answerIndex);

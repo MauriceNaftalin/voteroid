@@ -18,17 +18,28 @@
 <label style="width: 100px;" id="questionNameLabel">No question</label>
 <!--https://stackoverflow.com/a/15069289-->
 <script>
+    connectStompClient();
+
     const params = new URLSearchParams(window.location.search);
     const question = params.get('question');
     showQuestionName(question);
-    // consoleOutput(`ws://` + window.location.host + `/gs-guide-websocket`);
 
-    document.addEventListener("DOMContentLoaded", function() {
-        stompClient.activate();
+    document.addEventListener('DOMContentLoaded', function() {
         var svgElement = document.getElementById("svg");
-        svgElement.setAttribute("width", 250);
-        svgElement.setAttribute("height", 250);
-        setUpSvg(250,250);
+        const params = new URLSearchParams(window.location.search);
+        if (params.size === 0) {
+            var chartHeight = window.innerHeight - 75;
+            var chartWidth = window.innerWidth - 20;
+            svgElement.setAttribute("width", chartWidth);
+            svgElement.setAttribute("height", chartHeight);
+            setUpSvg(chartWidth, chartHeight);
+            getCurrentQuestionAndSetButtonListeners();
+        } else {
+            showQuestionName(question);
+            svgElement.setAttribute("width", 250);
+            svgElement.setAttribute("height", 250);
+            setUpSvg(250,250);
+        }
     });
 
     document.addEventListener("DOMContentLoaded", function() {
