@@ -10,10 +10,10 @@ const stompClient = new StompJs.Client({
 stompClient.onConnect = (frame) => {
     console.log('Connected: ' + frame);
     const params = new URLSearchParams(window.location.search);
-    if (params.size == 0) {
+    if (params.size === 0) {
         // phone client
-        stompClient.subscribe('/topic/currentQuestion/', (data) => {
-            getCurrentQuestionAndSetButtonListeners();
+        stompClient.subscribe('/topic/currentSlide/', (data) => {
+            setButtonListenersAndLabels(JSON.parse(data.body).content);
         });
         stompClient.subscribe('/topic/votes', (voteUpdate) => {
             setVoteCount(JSON.parse(voteUpdate.body).content);

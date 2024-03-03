@@ -6,7 +6,9 @@ function showQuestionName(text) {
     document.getElementById('questionNameLabel').textContent = text;
 }
 
-function setUpSvg(svgWidth, svgHeight) {
+function setUpSvg(svgElement, svgWidth, svgHeight) {
+    svgElement.setAttribute("width", svgWidth);
+    svgElement.setAttribute("height", svgHeight);
     svg = d3.select("svg");
     chartHeight = svgHeight;
     var data = [0, 0, 0];
@@ -33,17 +35,3 @@ function setVoteCount(voteUpdate) {
             return chartHeight - (voteCount * 10);
         });
 }
-
-/*
-function setColumnLabels(labelsText) {
-    svg.selectAll("text")
-        .data(labelsText)
-        .enter()
-        .append("text")
-        .text(d => d) // Set text content based on data
-        .attr("text-anchor", "middle") // Center-align the text
-        .attr("x", (d, i) => i * barWidth + barWidth / 2) // Set x position based on data
-        .attr("y", chartHeight - 2); // Set y position
-}
-*/
-

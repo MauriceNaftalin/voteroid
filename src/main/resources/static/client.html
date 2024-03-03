@@ -10,7 +10,7 @@
 </head>
 <body>
 <svg id="svg"></svg>
-<div>
+<div id="buttonsDiv">
     <button class="answerButton">answerButton1</button>
     <button class="answerButton">answerButton2</button>
     <button class="answerButton">answerButton3</button>
@@ -25,30 +25,29 @@
         const params = new URLSearchParams(window.location.search);
         if (params.size === 0) {
             // phone client
-            var chartHeight = window.innerHeight - 75;
-            var chartWidth = window.innerWidth - 20;
-            svgElement.setAttribute("width", chartWidth);
-            svgElement.setAttribute("height", chartHeight);
-            setUpSvg(chartWidth, chartHeight);
-            getCurrentQuestionAndSetButtonListeners();
+            setUpSvg(svgElement, window.innerWidth - 25, window.innerHeight - 75);
+            getSlideAndProcess('current-slide', data => {
+                showQuestionName(data.question);
+                setButtonListenersAndLabels(data);
+            })
         } else {
             // presentation iframe
+            setUpSvg(svgElement, 250, 250);
             const question = params.get('question');
             showQuestionName(question);
-            svgElement.setAttribute("width", 250);
-            svgElement.setAttribute("height", 250);
-            setUpSvg(250,250);
-            fetch(`http://${window.location.host}/slides/${question}`, {
-                method: 'GET',
-                headers: {'Content-Type': 'application/json'}
-            })
-                .then(response => {if (!response.ok) throw new Error('Network response was not ok');return response.json();})
-                .then(data => {
-                    setButtonLabels(data.answers);
-                })
-                .catch(error => console.error('Fetch error:', error))
+            getSlideAndProcess(question, data => setButtonLabels(data.answers));
         }
     });
+
+    function getSlideAndProcess(question, functionx) {
+        fetch(`http://${window.location.host}/slides/${question}`, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        })
+            .then(response => {if (!response.ok) throw new Error('Network error');return response.json();})
+            .then(data => functionx(data))
+            .catch(error => console.error('Fetch error:', error))
+    }
 
     function setButtonLabels(answers) {
         const answerButtons = document.getElementsByClassName('answerButton');
@@ -68,34 +67,25 @@
     }
 
     /* called at initialisation of the client, and when the slide changes */
-    function getCurrentQuestionAndSetButtonListeners() {
-        fetch(`http://${window.location.host}/slides/current-slide`, {
-            method: 'GET',
-            headers: {'Content-Type': 'application/json'}
-        })
-            .then(response => {if (!response.ok) throw new Error('Network error');return response.json();})
-            .then(data => {
-                const answerButtons = document.getElementsByClassName('answerButton');
-                showQuestionName(data.question);
-                if (data.question === "No question") {
-                    document.getElementById('svg').style.visibility = 'hidden';
-                    for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
-                        answerButtons[answerIndex].style.visibility = 'hidden';
-                    }
-                } else {
-                    document.getElementById('svg').style.visibility = 'visible';
-                    for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
-                        setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
-                        setButtonLabels(data.answers);
-                        // d3 is 1-indexed
-                        setVoteCount({"answerIndex": answerIndex + 1, "voteCount": data.answers[answerIndex].votes});
-                        answerButtons[answerIndex].style.visibility = 'visible';
-                        const answerTexts = data.answers.map(obj => obj.text);
-                        console.log(answerTexts);
-                    }
-                }
-            })
-            .catch(error => console.error('Fetch error:', error));
+    function setButtonListenersAndLabels(data) {
+        const answerButtons = document.getElementsByClassName('answerButton');
+        showQuestionName(data.question);
+        if (data.question === "No question") {
+            setSvgAndButtonVisibility('hidden')
+        } else {
+            setSvgAndButtonVisibility('visible')
+            for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
+                setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
+                setButtonLabels(data.answers);
+                // d3 is 1-indexed
+                setVoteCount({"answerIndex": answerIndex + 1, "voteCount": data.answers[answerIndex].votes});
+            }
+        }
+    }
+
+    function setSvgAndButtonVisibility(visibility) {
+        document.getElementById('svg').style.visibility = visibility;
+        document.getElementById('buttonsDiv').style.visibility = visibility;
     }
 </script>
 </body>

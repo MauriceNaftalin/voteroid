@@ -44,7 +44,7 @@ public class PresentationController {
     public void setCurrentQuestionName(@RequestBody String currentQuestionName) {
         logger.debug("PUT /current-question-name:  " + currentQuestionName);
         presentation.setCurrentQuestionName(currentQuestionName);
-        simpTemplate.convertAndSend("/topic/currentQuestion/", Map.of("content", currentQuestionName));
+        simpTemplate.convertAndSend("/topic/currentSlide/", Map.of("content", presentation.getCurrentSlide()));
     }
 
     // called at client initialisation
