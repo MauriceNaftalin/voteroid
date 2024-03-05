@@ -1,10 +1,5 @@
 var svg;
 var chartHeight;
-var barWidth;
-
-function showQuestionName(text) {
-    document.getElementById('questionNameLabel').textContent = text;
-}
 
 function setUpSvg(svgElement, svgWidth, svgHeight) {
     svgElement.setAttribute("width", svgWidth);
@@ -12,7 +7,7 @@ function setUpSvg(svgElement, svgWidth, svgHeight) {
     svg = d3.select("svg");
     chartHeight = svgHeight;
     var data = [0, 0, 0];
-    barWidth = svgWidth / data.length;
+    const barWidth = svgWidth / data.length;
 
     svg.selectAll("rect")
         .data(data)

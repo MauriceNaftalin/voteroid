@@ -11,9 +11,9 @@ stompClient.onConnect = (frame) => {
     console.log('Connected: ' + frame);
     const params = new URLSearchParams(window.location.search);
     if (params.size === 0) {
-        // phone client
+        // voting client
         stompClient.subscribe('/topic/currentSlide/', (data) => {
-            setButtonListenersAndLabels(JSON.parse(data.body).content);
+            initialiseClient(JSON.parse(data.body).content)
         });
         stompClient.subscribe('/topic/votes', (voteUpdate) => {
             setVoteCount(JSON.parse(voteUpdate.body).content);

@@ -23,67 +23,58 @@
     document.addEventListener('DOMContentLoaded', function() {
         var svgElement = document.getElementById("svg");
         const params = new URLSearchParams(window.location.search);
+        var initialQuestion;
         if (params.size === 0) {
-            // phone client
+            // voting client
             setUpSvg(svgElement, window.innerWidth - 25, window.innerHeight - 75);
-            getSlideAndProcess('current-slide', data => {
-                showQuestionName(data.question);
-                setButtonListenersAndLabels(data);
-            })
+            initialQuestion = 'current-slide';
         } else {
             // presentation iframe
             setUpSvg(svgElement, 250, 250);
-            const question = params.get('question');
-            showQuestionName(question);
-            getSlideAndProcess(question, data => setButtonLabels(data.answers));
+            initialQuestion = params.get('question');
         }
+        getSlideAndProcess(initialQuestion);
     });
 
-    function getSlideAndProcess(question, functionx) {
-        fetch(`http://${window.location.host}/slides/${question}`, {
+    function getSlideAndProcess(initialQuestion) {
+        fetch(`http://${window.location.host}/slides/${initialQuestion}`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         })
             .then(response => {if (!response.ok) throw new Error('Network error');return response.json();})
-            .then(data => functionx(data))
+            .then(slide => initialiseClient(slide))
             .catch(error => console.error('Fetch error:', error))
     }
 
-    function setButtonLabels(answers) {
+    function initialiseClient(slide) {
+        document.getElementById('questionNameLabel').textContent = slide.question;
         const answerButtons = document.getElementsByClassName('answerButton');
-        const answerTexts = answers.map(obj => obj.text);
+        const answerTexts = slide.answers.map(obj => obj.text);
         for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
             answerButtons[answerIndex].textContent = answerTexts[answerIndex];
             console.log(answerTexts);
         }
+        initialiseVotingClient(slide)
     }
 
-    function setAnswerButtonListener(button, answerIndex) {
-        button.addEventListener('click', function () {
-                // 1-indexed, as serialization doesn't work for a payload of 0
-                stompClient.publish({destination: "/app/vote", body: answerIndex + 1});
-            }
-        )
-    }
-
-    /* called at initialisation of the client, and when the slide changes */
-    function setButtonListenersAndLabels(data) {
-        const answerButtons = document.getElementsByClassName('answerButton');
-        showQuestionName(data.question);
-        if (data.question === "No question") {
-            setSvgAndButtonVisibility('hidden')
-        } else {
-            setSvgAndButtonVisibility('visible')
+    function initialiseVotingClient(slide) {
+        setSvgAndButtonsVisible(slide.question);
+        if (slide.question !== "No question") {
+            const answerButtons = document.getElementsByClassName('answerButton');
             for (let answerIndex = 0; answerIndex < answerButtons.length; answerIndex++) {
-                setAnswerButtonListener(answerButtons[answerIndex], answerIndex);
-                setButtonLabels(data.answers);
+                answerButtons[answerIndex].addEventListener('click', function () {
+                        // 1-indexed, as serialization doesn't work for a payload of 0
+                        stompClient.publish({destination: "/app/vote", body: answerIndex + 1});
+                    }
+                )
                 // d3 is 1-indexed
-                setVoteCount({"answerIndex": answerIndex + 1, "voteCount": data.answers[answerIndex].votes});
+                setVoteCount({"answerIndex": answerIndex + 1, "voteCount": slide.answers[answerIndex].votes});
             }
         }
     }
 
-    function setSvgAndButtonVisibility(visibility) {
+    function setSvgAndButtonsVisible(question) {
+        const visibility = question === 'No question' ? 'hidden' : 'visible';
         document.getElementById('svg').style.visibility = visibility;
         document.getElementById('buttonsDiv').style.visibility = visibility;
     }
