@@ -1,3 +1,5 @@
+'use strict'
+
 var svg;
 var chartHeight;
 
@@ -6,7 +8,7 @@ function setUpSvg(svgElement, svgWidth, svgHeight) {
     svgElement.setAttribute("height", svgHeight);
     svg = d3.select("svg");
     chartHeight = svgHeight;
-    var data = [0, 0, 0];
+    let data = [0, 0, 0];
     const barWidth = svgWidth / data.length;
 
     svg.selectAll("rect")

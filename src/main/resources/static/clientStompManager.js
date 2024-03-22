@@ -1,3 +1,5 @@
+'use strict'
+
 const stompClient = new StompJs.Client({
     // Haven't tested the use of window.location.host on AWS yet, so the lines below are a fallback
     // const params = new URLSearchParams(window.location.search);
