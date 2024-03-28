@@ -1,54 +1,56 @@
 <script>
-    function putQuestionName(questionName) {
-        console.log(questionName);
-        const requestOptions = {
-            method: 'PUT',
-            // headers: { 'Content-Type': 'application/json' },
-            // body: JSON.stringify('/slides/question1')
-            headers: { 'Content-Type': 'text/plain' },
-            body: questionName
-        };
-        fetch('http://localhost:8080/current-question-name', requestOptions);
-    }
+  'use strict'
 
-    Reveal.on( 'ready', event => {
-        putQuestionName("No question");
-    } );
+  function putQuestionName(questionName) {
+    console.log(questionName);
+    const requestOptions = {
+      method: 'PUT',
+      // headers: { 'Content-Type': 'application/json' },
+      // body: JSON.stringify('/slides/question1')
+      headers: { 'Content-Type': 'text/plain' },
+      body: questionName
+    };
+    fetch('http://localhost:8080/current-question-name', requestOptions);
+  }
 
-    Reveal.on( 'slidetransitionend', event => {
-        const iframeIdElement = (event.currentSlide.getElementsByTagName("iframe"))[0];
-        putQuestionName(iframeIdElement === undefined ? "No question" : iframeIdElement.id);
-    });
+  Reveal.on( 'ready', event => {
+    putQuestionName("No question");
+  } );
 
-    function postSlide(question, concatenatedAnswerTexts) {
-        const url = 'http://localhost:8080/slides';
+  Reveal.on( 'slidetransitionend', event => {
+    const iframeIdElement = (event.currentSlide.getElementsByTagName("iframe"))[0];
+    putQuestionName(iframeIdElement === undefined ? "No question" : iframeIdElement.id);
+  });
 
-        const answerTexts = concatenatedAnswerTexts.split(';');
+  function postSlide(question, concatenatedAnswerTexts) {
+    const url = 'http://localhost:8080/slides';
 
-        const slide = {
-            question: question,
-            answers: answerTexts.map(text => ({ text, votes: 0 })) // Map each text to an Answer object
-        };
+    const answerTexts = concatenatedAnswerTexts.split(';');
 
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(slide)
-        };
+    const slide = {
+      question: question,
+      answers: answerTexts.map(text => ({ text, votes: 0 })) // Map each text to an Answer object
+    };
 
-        fetch(url, requestOptions)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network error');
-                }
-                return response.json(); // or .text() if you're not returning JSON
-            })
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch(error => {
-                console.error('Fetch failed:', error);
-            });
-    }
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(slide)
+    };
+
+    fetch(url, requestOptions)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network error');
+        }
+        return response.json(); // or .text() if you're not returning JSON
+      })
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch(error => {
+        console.error('Fetch failed:', error);
+      });
+  }
 
 </script>

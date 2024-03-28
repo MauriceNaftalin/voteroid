@@ -64,7 +64,7 @@ System.out.print(intList.contains(1));
                 // return response.json();
             })
             .then(data => {
-                document.getElementById("question1").innerHTML='<iframe id="question1" src="http://localhost:8080/index.html?question=question1" width="800" height="300" allowfullscreen></iframe>';
+                document.getElementById("question1").innerHTML='<iframe id="question1" src="http://localhost:8080/client.html?question=question1" width="800" height="300" allowfullscreen></iframe>';
                 console.log('Success:', data);
             })
             .catch(error => {
@@ -135,7 +135,7 @@ System.out.print(intList.contains(1));
                 // return response.json();
             })
             .then(data => {
-                document.getElementById("question2").innerHTML='<iframe id="question2" src="http://localhost:8080/index.html?question=question2" width="800" height="300" allowfullscreen></iframe>';
+                document.getElementById("question2").innerHTML='<iframe id="question2" src="http://localhost:8080/client.html?question=question2" width="800" height="300" allowfullscreen></iframe>';
                 console.log('Success:', data);
             })
             .catch(error => {

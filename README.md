@@ -9,7 +9,7 @@ To run the example, clone or download the project, then:
     - copy `presentation-local.adoc` and `presentation-local-docinfo-footer.html` from this repository's `examples` directory to the root of the `reveal.js` presentation
     - run Asciidoctor reveal.js (download from https://github.com/asciidoctor/asciidoctor-reveal.js/releases) on  `presentation-local.adoc` 
     - open `presentation-local.html` locally
-- open `http://localhost:8080/phoneClient.html` (on a phone simulator if possible)
+- open `http://localhost:8080/client.html` (on a phone simulator if possible)
 
 Version history:
 - 0.0.1 Initial commit
