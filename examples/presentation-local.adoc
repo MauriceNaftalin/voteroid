@@ -38,42 +38,7 @@ System.out.print(intList.contains(1));
 [.column]
 [pass]
 ++++
-<div id="question1">No connection to server</div>
-<script>
-    function postSlide(question, concatenatedAnswerTexts) {
-        const url = 'http://localhost:8080/slides';
-
-        const answerTexts = concatenatedAnswerTexts.split(';');
-
-        const slide = {
-            question: question,
-            answers: answerTexts.map(text => ({ text, votes: 0 }))
-        };
-
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(slide)
-        };
-
-        fetch(url, requestOptions)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network error');
-                }
-                // return response.json();
-            })
-            .then(data => {
-                document.getElementById("question1").innerHTML='<iframe id="question1" src="http://localhost:8080/client.html?question=question1" width="800" height="300" allowfullscreen></iframe>';
-                console.log('Success:', data);
-            })
-            .catch(error => {
-                console.error('Fetch failed:', error);
-            });
-    }
-
-    postSlide('question1','true,false;false,true;true,true');
-</script>
+<div class="votingQuestion">question1:true,false;false,true;true,true</div>
 ++++
 
 == What might it print?
@@ -109,41 +74,5 @@ System.out.print(intList.contains(1));
 [.column]
 [pass]
 ++++
-<div id="question2">No connection to server</div>
-<script>
-    function postSlide(question, concatenatedAnswerTexts) {
-        const url = 'http://localhost:8080/slides';
-
-        const answerTexts = concatenatedAnswerTexts.split(';');
-
-        const slide = {
-            question: question,
-            answers: answerTexts.map(text => ({ text, votes: 0 }))
-        };
-
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(slide)
-        };
-
-        fetch(url, requestOptions)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network error');
-                }
-                // return response.json();
-            })
-            .then(data => {
-                document.getElementById("question2").innerHTML='<iframe id="question2" src="http://localhost:8080/client.html?question=question2" width="800" height="300" allowfullscreen></iframe>';
-                console.log('Success:', data);
-            })
-            .catch(error => {
-                console.error('Fetch failed:', error);
-            });
-    }
-
-    postSlide('question2','yes,no;no,yes;yes,yes');
-
-</script>
+<div class="votingQuestion">question2:yes,no;no,yes;yes,yes</div>
 ++++
