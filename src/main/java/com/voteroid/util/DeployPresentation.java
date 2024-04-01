@@ -24,6 +24,7 @@ public class DeployPresentation {
         String adocFileName = sourceFilePath.getFileName().toString();
 
         Path tempDirPath = Files.createTempDirectory("presentation");
+        System.out.println("Temporary directory: " + tempDirPath);
 
         Files.copy(sourceFilePath, tempDirPath.resolve(adocFileName));
         Files.copy(footerFilePath, tempDirPath.resolve(adocFileName.replace(".adoc", "-docinfo-footer.html")));
